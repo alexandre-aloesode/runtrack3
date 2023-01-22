@@ -1,0 +1,18 @@
+body {
+    margin: 25%;
+    margin-top: 0;
+}
+
+#game_container {
+
+    min-height: 500px;
+
+    border: solid 1px black;
+}
+
+#img_container {
+
+    min-height: 500px;
+
+    border: solid 1px black;
+}

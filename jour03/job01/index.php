@@ -11,12 +11,12 @@ La fonction de récupération et d’affichage doit se nommer “citation()”. 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job01</title>
     <script src="script.js"></script>
+    <title>Job01</title>
 </head>
 <body>
 
-    <button id="button">Cliquez-moi</button>
-    
+    <button id="button">Montrez-moi</button>
+
 </body>
 </html>
