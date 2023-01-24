@@ -18,24 +18,15 @@ Lorsqu’il se connecte, il est renvoyé vers la page d’accueil. -->
 
 <?php 
 
-    if(session_id() == '') session_start();
+    session_start();
 
-    include './Classes/User.php';
-
-    if(isset($_POST['subscribe'])) {
-
-        $user = new User();
-
-        $user->register();
+    if(isset($_POST['deco'])) {
+        
+        session_destroy();
+        header('Location: index.php');
     }
 
-    if(isset($_POST['login'])) {
-
-        $user = new User();
-
-        $user->login();
-    }
-// session_destroy();
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,14 +34,13 @@ Lorsqu’il se connecte, il est renvoyé vers la page d’accueil. -->
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="script.js"></script>
+    <script defer src="script.js"></script>
     <link rel="stylesheet" href="style.css">
     <title>Job01</title>
 </head>
 <body>
     
     <header>
-<?php if(isset($_SESSION['user'])) echo $_SESSION['user']?>
         <nav>
             <ul>
                 <a href="index.php">
@@ -59,8 +49,22 @@ Lorsqu’il se connecte, il est renvoyé vers la page d’accueil. -->
             </ul>
         </nav>
 
+        <?php if(isset($_SESSION['user'])): ?>
+
         <nav>
-            <?php if(!isset($_SESSION['user'])): ?>
+            <ul>
+                <li>
+                    <form method="POST">
+                        <button type="submit" name="deco" id="deco">Déconnexion</button>
+                    </form>
+                </li>   
+            </ul>
+        </nav>
+
+        <?php else : ?>
+
+        <nav>
+            
             <ul>
                 <li id="show_login">Connexion</li>
                 <li id="show_subscribe">Inscription</li>
@@ -71,31 +75,41 @@ Lorsqu’il se connecte, il est renvoyé vers la page d’accueil. -->
 
     </header>
 
+    <?php if(!isset($_SESSION['user'])): ?>
+
     <form method="POST" id="login_form">
 
-        <input type="text" name="name" placeholder="Prénom">
+        <label id="error_login"></label>
 
-        <input type="password" name="password" placeholder="Mot de passe">
+        <input type="text" name="login_name" placeholder="Prénom">
 
-        <button type="button" id="login_btn">Connexion</button>
+        <input type="password" name="login_password" placeholder="Mot de passe">
+
+        <button type="submit" id="login_btn">Connexion</button>
 
     </form>
 
     <form method="POST" id="subscribe_form">
+            
+        <label id="error_subscribe"></label>
 
         <input type="text" name="name" id="input_name" placeholder="Prénom">
+        <label id="error_name"></label>
+
         <input type="text" name="surname" placeholder="Nom">
         <input type="text" name="email" id="input_email" placeholder="email">
+        <label id="error_email"></label>
 
         <input type="password" name="password" placeholder="Mot de passe">
+        <label id="error_password"></label>
         <input type="password" name="verify_password" placeholder="Confirmation mot de passe">
 
-        <button type="button" id="subscribe_btn">S'inscrire</button>
+        <button type="submit" id="subscribe_btn">S'inscrire</button>
 
 
     </form>
 
-    
+    <?php endif ?>
 
 </body>
 </html>

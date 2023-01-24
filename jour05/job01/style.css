@@ -21,7 +21,7 @@ header {
         margin-right: 40px;
     }
 
-    #show_login:hover, #show_subscribe:hover {
+    #show_login:hover, #show_subscribe:hover, #deco:hover {
 
         cursor: grab;
     }
@@ -32,3 +32,10 @@ header {
 
         width: 50%;
     }
+
+        #error_name, #error_email, #error_password, #error_subscribe, #error_login {
+
+            font-style: italic;
+            color: red;
+            font-size: 100%;
+        }

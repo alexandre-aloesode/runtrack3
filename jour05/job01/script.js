@@ -1,5 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
-    
+ 
 //                                  Masquer par défaut le form d'inscription et l'afficher onclick
 
     const subscribe_form = document.querySelector("#subscribe_form");
@@ -8,6 +7,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const show_subscribe = document.querySelector("#show_subscribe");
 
     show_subscribe.addEventListener("click", function() {
+
+        if(login_form.style.display == "flex") login_form.style.display = "none";
+
         subscribe_form.style.display = "flex";
     })
 
@@ -20,123 +22,113 @@ document.addEventListener("DOMContentLoaded", function() {
     const show_login = document.querySelector("#show_login");
 
     show_login.addEventListener("click", function() {
+
+        if(subscribe_form.style.display == "flex") subscribe_form.style.display = "none";
+
         login_form.style.display = "flex";
-    })
+    });
 
-    const subscribe_btn = document.querySelector("#subscribe_btn")
+
+
+    const subscribe_btn = document.querySelector("#subscribe_btn");
     
-    subscribe_btn.addEventListener("click", function() {
+    subscribe_btn.addEventListener("click", function(ev) {
 
-        let check = true;
+        ev.preventDefault();
 
         const request = new FormData(subscribe_form);
 
-        const user_input = [...request];
+        fetch("./Classes/User.php", {
 
-        if(user_input[0][1] == '' || user_input[1][1] == '' || user_input[2][1] == '' || user_input[3][1] == '' || user_input[3][1] == '' ) {
+            method: "POST",
 
-            check = false;
+            body: request
+        })
+        
+        .then((response) => {
 
-            alert("Certains champs sont vides");
-        }
+            return response.json();
 
-        // if(check ==  true && (user_password.length) <= 8) {
+        })
+        
+        .then((data) => {
 
-        //     check = false;
+            if(data.success == true) {
 
-        //     alert("Mot de passe trop simple");
-            
-        // }
+                subscribe_form.innerHTML = data.message;
 
-        if(check === true) {
+            }
 
-            fetch("users.php")
+            if(data.success == false) {
 
-                .then(response => response.json())
+                if(data.type == "name") {
 
-                .then((data) => {
+                    const error_name = document.querySelector("#error_name");
+                    error_name.innerHTML = data.message;
 
-                    for(let x in data) {
+                }
 
-                        if(user_input[0][1] == data[x].prenom) {
+                if(data.type == "email") {
 
-                            const check_name = document.querySelector("#input_name");
-                            check_name.textContent = "ss"
-                            console.log(check_name.innerHTML);
+                    const error_email = document.querySelector("#error_email");
+                    error_email.innerHTML = data.message;
+                }
 
+                if(data.type == "name_email") {
 
-                            alert("Ce prénom est déjà pris");
+                    const error_name = document.querySelector("#error_name");
+                    error_name.innerHTML = "Ce prénom est déjà pris";
 
-                            check = false;
+                    const error_email = document.querySelector("#error_email");
+                    error_email.innerHTML = "Cet email est déjà pris";
+                }
 
-                        }
+                if(data.type == "general" || data.type == "server") { 
 
-                        if(user_input[2][1] == data[x].email) {
-
-                            const check_email = document.querySelector("#input_email");
-                            check_email.innerHTML = "test";
-
-                            alert("Cet email est déjà pris");
-
-                            check = false;
-
-                        }
-
-                        else if(check === true) {
-
-                            subscribe_btn.setAttribute("name", "subscribe");
-                            
-                            subscribe_btn.setAttribute("type", "submit");
-
-                        }
-                    }
-                
-                });
-
-        }
+                    const error_subscribe = document.querySelector("#error_subscribe");
+                    error_subscribe.innerHTML = data.message;
+                }
+            }
+        });                   
     });
+
+
+    
 
     const login_btn = document.querySelector("#login_btn")
     
-    login_btn.addEventListener("click", function() {
+    login_btn.addEventListener("click", function(ev) {
 
-        let check = 1 ;
+        ev.preventDefault();
 
         const request = new FormData(login_form);
+                               
+        fetch("./Classes/User.php", {
 
-        const user_input = [...request];
+            method: "POST",
 
-        fetch("users.php")
-
-                .then(response => response.json())
-
-                .then((data) => {     
-
-                    for(let x in data) {
-
-                        if(user_input[0][1] == data[x].prenom) {                           
-
-                            login_btn.setAttribute("name", "login");
-                            
-                            login_btn.setAttribute("type", "submit");
-
-                            check = 0;
-
-                            break;
-
-                        }
-                     
-                    }
-
-                    if(check == 1) alert("erreur");
-
-                
-                });
-
+            body: request
+        })
         
+        .then((response) => {
 
+            return response.json();
+
+        })
+        
+        .then((data) => {
+
+            if(data.success == true) {
+
+                login_form.innerHTML = data.message + "<br> Bienvenue " + data.name;
+
+            }
+
+            else if(data.success == false) {
+
+                const error_login = document.querySelector("#error_login");
+
+                error_login.innerHTML = data.message;
+            }
+        });  
     });
-})
-
-
-
